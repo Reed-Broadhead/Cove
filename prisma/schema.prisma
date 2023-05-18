@@ -9,3 +9,76 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique
+  nickname   String
+  password   String
+  email      String   @unique
+  created_at DateTime @default(now())
+
+  ownedServers Server[]
+  messages     Messages[]
+  servers      UserServer[]
+  groups       UserGroup[]
+  // request Requests?
+  // friends Friends[]
+
+  friends   User[] @relation("friends")
+  friendsOf User[] @relation("friends")
+}
+
+model Server {
+  id         Int          @id @default(autoincrement())
+  serverName String       @unique
+  createdAt  DateTime     @default(now())
+  owner      User         @relation(fields: [ownerId], references: [id])
+  ownerId    Int          
+  users      UserServer[]
+  groups     Group[]
+}
+
+model UserServer {
+  id       Int    @id @default(autoincrement())
+  user     User   @relation(fields: [userId], references: [id])
+  userId   Int
+  server   Server @relation(fields: [serverId], references: [id])
+  serverId Int
+}
+
+model Group {
+  id        Int         @id @default(autoincrement())
+  name      String
+  createdAt DateTime    @default(now())
+  servers   Server      @relation(fields: [serverId], references: [id])
+  serverId  Int
+  user      UserGroup[]
+  messages  Messages[]
+}
+
+model UserGroup {
+  id      Int   @id @default(autoincrement())
+  user    User  @relation(fields: [userId], references: [id])
+  userId  Int
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int
+}
+
+model Messages {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  sender    User     @relation(fields: [senderId], references: [id])
+  senderId  Int
+  group     Group    @relation(fields: [groupId], references: [id])
+  groupId   Int
+}
+
+// model Requests { 
+//   id Int @id @default(autoincrement())
+//   sender User @relation(fields: [senderId], references:[id])
+//   senderId Int @unique
+//   receiver User @relation(fields: [receiverId], references: [id])
+//   receiverId Int @unique
+//   pending Boolean 
+// }
