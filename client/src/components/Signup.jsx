@@ -1,20 +1,16 @@
-import {React} from 'react';
+import React, { useEffect } from 'react'
+import { useState } from 'react'
 import {useFormik} from "formik"
 import * as yup from "yup"
-import { useDispatch, useSelector } from 'react-redux';
-import { setUser} from '../app/user.js';
-import { NavLink, useNavigate} from 'react-router-dom';
-
-
 function Login() {
-    const navigate = useNavigate()
-    const user = useSelector(state => state.user)
-    const dispatch = useDispatch()
-    console.log(user.value)
-
-    if (user){
-        navigate('/homepage')
-    }
+    // useEffect(() => {
+    // async function FetchUsers() {
+    //     const response = await fetch('http://localhost:5000/signup')
+    //     const users = await response.json();
+    //     return users
+    // }
+    // FetchUsers().then((users) => console.log(users))
+    // }, [])
 
     const formik = useFormik({
         initialValues: { 
@@ -37,7 +33,6 @@ function Login() {
 
     const handlePatch = async (values, helpers) => {
         console.log(values)
-        dispatch(setUser(values))
         const newUser = {
             method: "POST",
             headers: {
@@ -46,13 +41,12 @@ function Login() {
             body: JSON.stringify(values)
         }
         try {
-        const resp = await fetch('/api/login', newUser);
+        const resp = await fetch('/api/signup', newUser);
         const data = await resp.json();
         return data
         }catch (e) {
             return e
         }
-        
     }
 
     return (
@@ -69,9 +63,7 @@ function Login() {
         <input id="password" name="password" value={formik.values.password} onChange={formik.handleChange} />
         <button type="submit">Save</button>
         </form>
-        <NavLink to='/signup' className='text-center text-green-500'>Signup</NavLink>
         </div>
-        
     )
 }
 
