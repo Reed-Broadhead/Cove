@@ -22,8 +22,9 @@ model User {
   messages     Messages[]
   servers      UserServer[]
   groups       UserGroup[]
-  // request Requests?
-  // friends Friends[]
+  sent         Requests[]  @relation("sent")
+  requests     Requests[]  @relation("recived")
+
 
   friends   User[] @relation("friends")
   friendsOf User[] @relation("friends")
@@ -74,11 +75,12 @@ model Messages {
   groupId   Int
 }
 
-// model Requests { 
-//   id Int @id @default(autoincrement())
-//   sender User @relation(fields: [senderId], references:[id])
-//   senderId Int @unique
-//   receiver User @relation(fields: [receiverId], references: [id])
-//   receiverId Int @unique
-//   pending Boolean 
-// }
+model Requests { 
+  id Int @id @default(autoincrement())
+  senderName String
+  sender   User @relation("sent", fields: [senderId], references: [id])
+  senderId Int 
+  receiver User @relation("recived",fields: [receiverId], references: [id])
+  receiverId Int 
+  pending Boolean 
+}

@@ -30,15 +30,15 @@ function App() {
 
 
   return (
-    <div>
-      {/*t Homepage /> */}
+    
+      
       <Routes>
         <Route path="/homepage" element={<Homepage />} />
         <Route path="/signup" element={<Signup/>} />
         <Route path="/" element={<Login/>} />
       </Routes>
 
-    </div>
+ 
     
   )
 }

@@ -19,7 +19,12 @@ app.use(cookieParser());
 
 app.get('/users', async (req, res, next) => { 
     try {
-    const users = await prisma.user.findMany()
+    const users = await prisma.user.findMany({
+        include: {
+            servers: true
+            
+        }}
+    )
     res.json(users)
     } catch(error){
         next(error.message);
@@ -88,36 +93,19 @@ app.get('/servers/:id', async (req, res, next) => {
     }
 })
 
-app.post('/servers', async (req, res, next) => { 
-
-    try {
-        const servers = await prisma.server.create({
-            data: {...req.body}
-        });
-        res.json(servers)
-    }catch (error) { 
-        next(error.message)
-    }
-})
-
-app.delete('/servers/:id', async (req, res, next) => {
-    try{
-        const servers = await prisma.server.delete({
-            where: {
-                id: Number(req.params.id)
-            }
-        })
-        res.json(servers)
-    } catch(error) {
-        next(error.message)
-    }
-})
 
 app.post('/login', async (req, res, next) => { 
     console.log(req.body)
     try {
         const {password, email} = req.body
-        const user = await prisma.user.findUnique({where: {email: email}})
+        const user = await prisma.user.findUnique({
+            where: {email: email},
+            include: {
+                friends: true,
+                friendsOf: true,
+                requests: true
+            }
+        })
         if (user.password === password) {
             res.cookie('user', user)
             res.status(200).send({message: "Logged in!", user: user})
@@ -132,8 +120,52 @@ app.get('/check', (req, res) => {
     if (req.cookies.user)
         res.status(200).send({user: req.cookies.user})
     else
-        res.status(401).send({message: "Not logged in."})
+        res.status(401).send(null)
 })
+
+app.get('/logout', function(req, res){
+    res.clearCookie('user');
+    res.send({message: "cookie cleared"})
+})
+
+app.post('/getFriends', async (req, res, next) =>{ 
+    try {
+        const {username} = req.body
+        const user = await prisma.user.findUnique({
+            where:{username: username}
+        })
+        res.status(200).send({message:'user found!', user: {id: user.id, username: user.username}})
+    } catch (error) { 
+        next(error.message)
+    }
+})
+
+app.post('/request', async (req, res, next) => {
+    
+    try{
+    
+    const request = await prisma.requests.create({
+        data: {
+            senderName: req.body.senderName,
+            senderId: req.body.senderId,
+            receiverId: req.body.receiverId,
+            pending: true
+        }
+    })
+    res.status(201).send({message: "response created successfully!"})
+    }catch(error){
+        res.status(500).send({ message: error.message });;
+    }
+})
+
+app.delete('/request/:id', async (req, res, next) => {
+        try{
+            const id = parseInt(req.params.id);
+            const request = await prisma.requests.delete({where: {id: id}})
+            res.status(200).send({message: 'deleted successfully'})
+        }catch(err){
+            next(err.message);}
+}) 
 
 
 app.listen(port, () => { 

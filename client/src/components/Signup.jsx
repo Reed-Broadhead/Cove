@@ -2,15 +2,20 @@ import React, { useEffect } from 'react'
 import { useState } from 'react'
 import {useFormik} from "formik"
 import * as yup from "yup"
+import { useDispatch, useSelector } from 'react-redux'
+import {setUser} from '../app/user'
+import { NavLink, useNavigate} from 'react-router-dom';
 function Login() {
-    // useEffect(() => {
-    // async function FetchUsers() {
-    //     const response = await fetch('http://localhost:5000/signup')
-    //     const users = await response.json();
-    //     return users
-    // }
-    // FetchUsers().then((users) => console.log(users))
-    // }, [])
+    const navigate = useNavigate()
+    const user = useSelector(state => state.user)
+    const dispatch = useDispatch()
+    
+
+    if (user.value){
+        navigate('/homepage')
+    }
+
+
 
     const formik = useFormik({
         initialValues: { 
