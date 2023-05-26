@@ -1,14 +1,20 @@
 import axios from 'axios'
+import { useSelector, useDispatch } from 'react-redux'
+import {setUser} from '../app/user.js'
+
+
 function CurrentRequests({data=[{senderName: 'no new request'}]}) {
-
-    const accept = () => {
-
+    const user = useSelector(state => state.user)
+    const dispatch = useDispatch()
+    
+    const accept = async (request) => {
+        const res = await axios.patch(`/api/usersFriend`, {friendsOf: request.senderId})
+        decline(request)
     }
     console.log({data})
+
     const decline = async (request) => { 
-        console.log(request.id)
-        // fetch(`/api/removeRequest/${request.id}`, method: 'DELETE')
-        axios.delete(`/api/request/${request.id}`)
+    axios.delete(`/api/request/${request.id}`, {data: {user: user.value.user}} )
     }
 
     const toDisplay = data.map((request) => {
@@ -16,7 +22,7 @@ function CurrentRequests({data=[{senderName: 'no new request'}]}) {
         <>
         <h1 >{`request from: ${request.senderName}`}</h1>
         <div>
-        <button onClick={() => accept()}className="bg-green-800 border border-green-950 border-10 rounded-sm shadow-md">accept</button>
+        <button onClick={() => accept(request)}className="bg-green-800 border border-green-950 border-10 rounded-sm shadow-md">accept</button>
         <button onClick={() => decline(request)}className="bg-green-800 border border-green-950 border-10 rounded-sm shadow-md">decline</button>
         </div>
         </>

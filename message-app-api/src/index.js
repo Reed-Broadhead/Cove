@@ -6,10 +6,13 @@ const cookieParser = require('cookie-parser');
 const port = process.env.PORT 
 const cors = require('cors');
 const { runInNewContext } = require("vm");
+const http = require('http');
+
+const app = express();
 
 // const cookie = require('cookie');
 
-const app = express();
+
 const prisma = new PrismaClient();
 prisma.$use(fieldEncryptionMiddleware());
 app.use(express.json());
@@ -58,15 +61,22 @@ app.post('/signup', async (req, res, next) => {
 
 })
 
-app.patch('/users/:id', async (req, res, next) => {
+app.patch('/usersFriend', async (req, res, next) => {
+    console.log(req.body.friendsOf)
     try {
-        const user = await prisma.post.update({
+        const user = await prisma.user.update({
             where: {
-                id: Number(req.params.id)
+                id: parseInt(req.cookies.user.id)
             },
-            data: req.body
+            data: {friendsOf : {
+                connect : {
+                    id: req.body.friendsOf
+                }
+            } }
         })
+        
         res.json(user)
+        
     }catch (error) {
         next(error.message)
     }
@@ -74,17 +84,22 @@ app.patch('/users/:id', async (req, res, next) => {
 
 app.get('/servers', async (req, res, next) => {
     try {
-        const server = await prisma.server.findMany()
+        const server = await prisma.server.findMany({
+            include: {
+                users: true,
+            }
+        })
         res.json(server)
     }catch (error) {
         next(error.message)
     }
 })
 app.get('/servers/:id', async (req, res, next) => {
+    console.log(req.params.id)
     try {
         const servers = await prisma.server.findUnique({
             where: {
-                id: Number(req.params.id)
+                id: parseInt(req.params.id)
             }
         })
         res.json(servers)
@@ -103,7 +118,9 @@ app.post('/login', async (req, res, next) => {
             include: {
                 friends: true,
                 friendsOf: true,
-                requests: true
+                requests: true,
+                servers: {include: {server: true, users: true} },
+                ownedServers: true
             }
         })
         if (user.password === password) {
@@ -115,6 +132,8 @@ app.post('/login', async (req, res, next) => {
         res.status(401).send({message: err.message})
     }
 })
+
+
 
 app.get('/check', (req, res) => {
     if (req.cookies.user)
@@ -159,16 +178,37 @@ app.post('/request', async (req, res, next) => {
 })
 
 app.delete('/request/:id', async (req, res, next) => {
+
         try{
+            console.log(req.body)
             const id = parseInt(req.params.id);
             const request = await prisma.requests.delete({where: {id: id}})
+
+            res.cookie('user', req.body.user)
             res.status(200).send({message: 'deleted successfully'})
         }catch(err){
             next(err.message);}
 }) 
 
+app.post('/userServer', async (req, res, next) => {
+    console.log(req.body)
+    try{
+        const userServer = await prisma.userServer.create({
+            data: {
+                userId: req.body.data.userId,
+                serverId: req.body.data.serverId
+            }
+        })
+        res.status(201).send({message: "user added"})
+    }catch(error){
+        next(error.message)
+    }
+})
+
 
 app.listen(port, () => { 
     console.log(`listening on ${port}`)
 })
+
+
 

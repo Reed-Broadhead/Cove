@@ -1,7 +1,10 @@
-import Icons from './Icons'
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from'react-redux'
 import {setUser} from '../app/user.js'
 import {setView} from '../app/view'
+import ServerCards from './ServerCards.jsx'
+import Icons from './Icons'
+import axios from "axios"
 
 function SideBar() { 
     const dispatch = useDispatch()
@@ -14,10 +17,25 @@ function SideBar() {
      }
 
 
+
     const logout = () => {
         remove()
-        dispatch(setUser(null))
-    }
+        dispatch(setUser(null))}
+    
+    const serversIn = []
+    user.value?.user.servers.forEach((server) => {
+        if (!user.value?.user.ownedServers.some(owned => owned.id  === server.server.id)) {
+        serversIn.push(server.server)``
+        }
+    })
+      console.log(user)
+
+    const all_servers = user.value?.user.ownedServers.concat(serversIn)
+    
+    
+    const mappedServers = all_servers?.map((server) => {
+        return <ServerCards server={server}>hi</ServerCards>
+    })
     
 
 
@@ -26,6 +44,7 @@ function SideBar() {
                         flex flex-col bg-green-700 text-green-100 shadow-sm items-center">
             
             <Icons data={'hi'}/>
+            {mappedServers}
             <i>2</i>
             <i>3</i>
             <i>4</i>
@@ -38,4 +57,4 @@ function SideBar() {
 
 }
 
-export default SideBar
+export default SideBar;

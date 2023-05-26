@@ -23,6 +23,7 @@
     "express-session": "^1.17.3",
     "formik": "^2.2.9",
     "pg": "^8.11.0",
-    "prisma-field-encryption": "^1.4.1"
+    "prisma-field-encryption": "^1.4.1",
+    "socket.io": "^4.6.1"
   }
 }
