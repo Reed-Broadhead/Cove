@@ -4,8 +4,7 @@ import ServerSettings from "./ServerSettings"
 
 function Server({data}) {
     const [view, setView] = useState('message')
-    console.log(data)
-
+    
     const setToDisplay = (x) => {
         setView(x)
     }

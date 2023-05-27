@@ -28,7 +28,7 @@ function SideBar() {
         serversIn.push(server.server)``
         }
     })
-      console.log(user)
+    
 
     const all_servers = user.value?.user.ownedServers.concat(serversIn)
     

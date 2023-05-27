@@ -100,9 +100,12 @@ app.get('/servers/:id', async (req, res, next) => {
         const servers = await prisma.server.findUnique({
             where: {
                 id: parseInt(req.params.id)
+            },
+            include: {
+                users: {include: {user: true}}
             }
         })
-        res.json(servers)
+        res.status(200).send({server: servers})
     }catch (error) { 
         next(error.message)
     }
@@ -119,7 +122,7 @@ app.post('/login', async (req, res, next) => {
                 friends: true,
                 friendsOf: true,
                 requests: true,
-                servers: {include: {server: true, users: true} },
+                servers: {include: {server: true} },
                 ownedServers: true
             }
         })
