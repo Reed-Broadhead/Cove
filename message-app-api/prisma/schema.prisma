@@ -24,6 +24,7 @@ model User {
   groups       UserGroup[]
   sent         Requests[]  @relation("sent")
   requests     Requests[]  @relation("recived")
+  serverRequests ServerRequests[]
 
 
   friends   User[] @relation("friends")
@@ -38,6 +39,7 @@ model Server {
   ownerId    Int          
   users      UserServer[]
   groups     Group[]
+  outGoingRequests  ServerRequests[]
 }
 
 model UserServer {
@@ -52,10 +54,11 @@ model Group {
   id        Int         @id @default(autoincrement())
   name      String
   createdAt DateTime    @default(now())
-  servers   Server      @relation(fields: [serverId], references: [id])
+  server   Server      @relation(fields: [serverId], references: [id])
   serverId  Int
   user      UserGroup[]
   messages  Messages[]
+  inServer Boolean
 }
 
 model UserGroup {
@@ -83,4 +86,13 @@ model Requests {
   receiver User @relation("recived",fields: [receiverId], references: [id])
   receiverId Int 
   pending Boolean 
+}
+
+model ServerRequests {
+  id Int @id @default(autoincrement())
+  server  Server @relation(fields: [serverId], references: [id])
+  serverId Int
+  receiver User @relation(fields: [receiverId], references: [id])
+  receiverId Int
+  created_at DateTime @default(now()) 
 }

@@ -87,6 +87,7 @@ app.get('/servers', async (req, res, next) => {
         const server = await prisma.server.findMany({
             include: {
                 users: true,
+                groups: true,
             }
         })
         res.json(server)
@@ -123,7 +124,16 @@ app.post('/login', async (req, res, next) => {
                 friendsOf: true,
                 requests: true,
                 servers: {include: {server: true} },
-                ownedServers: true
+                ownedServers: true,
+                serverRequests: {include: {server: {include:{groups: true}}} },
+                groups: {include: {
+                    group: {
+                        include:{
+                            server: true,
+                            messages: true,
+                        } 
+                    }
+                }}
             }
         })
         if (user.password === password) {
@@ -183,7 +193,6 @@ app.post('/request', async (req, res, next) => {
 app.delete('/request/:id', async (req, res, next) => {
 
         try{
-            console.log(req.body)
             const id = parseInt(req.params.id);
             const request = await prisma.requests.delete({where: {id: id}})
 
@@ -194,7 +203,6 @@ app.delete('/request/:id', async (req, res, next) => {
 }) 
 
 app.post('/userServer', async (req, res, next) => {
-    console.log(req.body)
     try{
         const userServer = await prisma.userServer.create({
             data: {
@@ -208,6 +216,38 @@ app.post('/userServer', async (req, res, next) => {
     }
 })
 
+app.delete('/userServer/:id', async (req, res, next) => {
+        try{
+            const id = parseInt(req.params.id);
+            const request = await prisma.userServer.delete({where: {id: id}})
+            res.status(200).send({message: "user removed from server!"})
+        }catch(error){ 
+            next(error.message)
+        }
+})
+
+app.delete('/serverRequests/:id', async (req, res, next) => {
+    try {
+        const id = parseInt(req.params.id);
+        const request = await prisma.serverRequests.delete({where: {id: id}})
+        res.status(200).send({message: "requests removed!"})
+    }catch(error){
+        next(error.message)
+    }
+})
+
+app.post('/serverRequests', async (req, res, next) => {
+    try{
+        const serverRequests = await prisma.serverRequests.create({
+            data: {
+                serverId: req.body.serverId,
+                receiverId: req.body.receiverId
+            }
+        })
+    }catch(error){
+        next(error.message)
+    }
+})
 
 app.listen(port, () => { 
     console.log(`listening on ${port}`)
