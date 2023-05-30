@@ -103,7 +103,8 @@ app.get('/servers/:id', async (req, res, next) => {
                 id: parseInt(req.params.id)
             },
             include: {
-                users: {include: {user: true}}
+                users: {include: {user: true}},
+                groups: {include: {messages: {include: {sender: true}}}},
             }
         })
         res.status(200).send({server: servers})

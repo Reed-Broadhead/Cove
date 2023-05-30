@@ -13,7 +13,7 @@ function Server({data}) {
         'message': 'Message',
         'settings': <ServerSettings data={data}/>
     }
-
+   
     return (
         <div className="h-screen border border-red-500">
             <h1 className="top-0">{`server name:${data.value.serverName}  `}</h1>

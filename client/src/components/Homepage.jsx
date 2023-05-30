@@ -32,7 +32,6 @@ function Start() {
 
     
    
-    console.log(user)
     
     const viewDisplay = {
         "friends": <Friends friends={user.value?.user.friends} friendsOf={user.value?.user.friendsOf}/>,
