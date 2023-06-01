@@ -207,8 +207,8 @@ app.post('/userServer', async (req, res, next) => {
     try{
         const userServer = await prisma.userServer.create({
             data: {
-                userId: req.body.data.userId,
-                serverId: req.body.data.serverId
+                userId: req.body.userId,
+                serverId: req.body.serverId
             }
         })
         res.status(201).send({message: "user added"})
@@ -228,6 +228,7 @@ app.delete('/userServer/:id', async (req, res, next) => {
 })
 
 app.delete('/serverRequests/:id', async (req, res, next) => {
+    console.log(req.params.id)
     try {
         const id = parseInt(req.params.id);
         const request = await prisma.serverRequests.delete({where: {id: id}})
@@ -249,6 +250,35 @@ app.post('/serverRequests', async (req, res, next) => {
         next(error.message)
     }
 })
+
+app.post('/groups', async (req, res, next) => {
+    try {
+        const group = await prisma.group.create({
+            data: {
+                name: req.body.name,
+                serverId: parseInt(req.body.serverId),
+                inServer: true
+            }
+        })
+    }catch(error){
+        next(error.message)
+    }
+})
+
+app.post('/messages', async (req, res, next) => {
+    try {
+        const messages = await prisma.messages.create({
+            data: {
+            senderId: parseInt(req.body.senderId),
+            groupId: parseInt(req.body.groupId),
+            content: req.body.content
+            }
+        })
+    }catch(error){
+        next(error.message);
+    }
+})
+
 
 app.listen(port, () => { 
     console.log(`listening on ${port}`)

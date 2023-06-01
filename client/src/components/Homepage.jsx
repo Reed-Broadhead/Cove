@@ -11,7 +11,7 @@ import Login from './Signup'
 import SideBar from './SideBar'
 import Friends from './Friends'
 import Server from './Server.jsx'
-
+import ServerRequests from './ServerRequest.jsx'
 import { io } from 'socket.io-client'
 
 function Start() {
@@ -34,7 +34,8 @@ function Start() {
     
     const viewDisplay = {
         "friends": <Friends friends={user.value?.user.friends} friendsOf={user.value?.user.friendsOf}/>,
-        "server" : <Server data={server} />
+        "server" : <Server data={server} />,
+        "serverRequests": <ServerRequests data={user}/>,
     }
     
     return (

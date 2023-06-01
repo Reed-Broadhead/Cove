@@ -10,7 +10,7 @@ function ServerSettings({data}) {
     const [ownerSettings, setOwnerSettings] = useState(data.value.ownerId == user.value.user.id ? <OwnerSettings data={data}/>: null)
 
     const addFriend = async (friend) => {
-        const res = await axios.post('/api/userServer', {data: {userId : friend.id, serverId:  data.value.id }})
+        const res = await axios.post('/api/serverRequests', {serverId:  data.value.id, receiverId : friend.id })
     }
     const totalFriends = user.value.user.friendsOf.concat(user.value.user.friends)
 

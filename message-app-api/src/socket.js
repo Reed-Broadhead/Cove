@@ -3,6 +3,7 @@ const app = express();
 const {Server} =  require('socket.io')
 const cors = require('cors')
 
+
 const io = new Server(3000, {
     cors: {
         origin: ['http://localhost:5173']
@@ -10,6 +11,9 @@ const io = new Server(3000, {
 });
 
 app.use(cors())
+
+
+
 
 io.on("connection", (socket) => {
     socket.emit("hello from server", 1, "2", { 3: Buffer.from([4]) });
@@ -21,14 +25,13 @@ io.on("connection", (socket) => {
     const allMessages = [];
 
     socket.on('send_message', (data) => {
-        // console.log(data.data)
+        console.log(data.data)
         io.to(data.room).emit("receive_message", [allMessages.concat(data.data)])
-
         socket.emit("add data", data.data)
+    
     })
 
     socket.on('new data', data => {
-        // console.log(data)
         allMessages.push(data[0])
     })
 

@@ -49,6 +49,7 @@ function SideBar() {
             <i>3</i>
             <i>4</i>
             <i>5</i>
+            <button onClick={() => dispatch(setView('serverRequests'))}>requests</button>
             <button onClick={() => dispatch(setView('friends'))} className='bottom-0'>friends</button>
             <button onClick={() => logout()} className='bottom-0'>Logout</button>
 

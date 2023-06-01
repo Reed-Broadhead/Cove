@@ -12,14 +12,21 @@ const socket = io("http://localhost:3000");
 function Message({group, user}) {
     const messages = useSelector(state => state.messages)
     const dispatch = useDispatch()
+    // console.log(group.id)
+    
+    console.log(messages)
+
 
     const [stateMessages, setStateMessages] = useState(group.messages)
 
-
+   
     useEffect(() => {
+    console.log(messages)
+        
     socket.connect();
 
     socket.on('receive_message', data => {
+        console.log(data)
         setStateMessages(stateMessages.concat(data[0]));
         dispatch(setMessages(messages.value.concat(data[0])))
         socket.emit('new data', data[0])
@@ -29,10 +36,12 @@ function Message({group, user}) {
     }, [socket])
 
 
+    const postMessage = async (data) => {
+        // console.log(data)
+        const newPost = await axios.post('/api/messages', {senderId: data.userId, groupId: data.room, content: data.data.content })
+    }
 
-   const toBeMapped = group.messages.concat(messages.value)
-
-
+    const toBeMapped = group.messages.concat(messages.value)
    
     const messagesByTime = toBeMapped.map((message) => {
         return ( 
@@ -53,7 +62,8 @@ function Message({group, user}) {
         }), onSubmit: (values) => {
             
             const data = {content: values.content, sender: {username: user.username}}
-            socket.emit("send_message", {data, room: group.id })
+            socket.emit("send_message", {data, room: group.id, userId: user.id})
+            postMessage({data, room: group.id, userId: user.id})
         }        
     })
 

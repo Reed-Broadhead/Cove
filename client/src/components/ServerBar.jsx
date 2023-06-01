@@ -3,6 +3,7 @@ import Message from "./Message"
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../app/user"
 import CreateNewGroup from "./CreateNewGroup"
+import ServerRequest from "./ServerRequest"
 
 function ServerBar({data, setToDisplay}) {
     const user =  useSelector(state => state.user)
@@ -18,6 +19,8 @@ function ServerBar({data, setToDisplay}) {
     const newGroup = () => {
         setToDisplay(<CreateNewGroup data={data.value} />)
     }
+
+
 
    
 
