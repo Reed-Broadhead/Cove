@@ -10,7 +10,7 @@ function Login() {
     const navigate = useNavigate()
     const user = useSelector(state => state.user)
     const dispatch = useDispatch()
-    console.log(user.value)
+  
 
     if (user.value){
         navigate('/homepage')
@@ -36,7 +36,7 @@ function Login() {
     })
 
     const handlePatch = async (values, helpers) => {
-        console.log(values)
+        
         
         const newUser = {
             method: "POST",

@@ -15,7 +15,6 @@ import Server from './Server.jsx'
 import { io } from 'socket.io-client'
 
 function Start() {
-    const socket = io("http://localhost:3000");
     const navigate = useNavigate()
     const user = useSelector(state => state.user)
     const view = useSelector(state => state.view)
@@ -26,11 +25,11 @@ function Start() {
         navigate('/')
     }
 
-    const onButtonClick = () => {
-        socket.emit("send_message", user)
-    }
 
-    
+
+    const onButtonClick = () => { 
+        console.log(user.value.user)
+    }
    
     
     const viewDisplay = {

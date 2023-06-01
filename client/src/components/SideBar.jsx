@@ -25,7 +25,7 @@ function SideBar() {
     const serversIn = []
     user.value?.user.servers.forEach((server) => {
         if (!user.value?.user.ownedServers.some(owned => owned.id  === server.server.id)) {
-        serversIn.push(server.server)``
+        serversIn.push(server.server)
         }
     })
     
@@ -34,13 +34,13 @@ function SideBar() {
     
     
     const mappedServers = all_servers?.map((server) => {
-        return <ServerCards server={server}>hi</ServerCards>
+        return <ServerCards key={server.id} server={server}>hi</ServerCards>
     })
     
 
 
     return (
-        <div className="fixed top-0 left-0 h-screen w-16 m-0
+        <div className="fixed top-0 left-0 h-screen w-20 m-0
                         flex flex-col bg-green-700 text-green-100 shadow-sm items-center">
             
             <Icons data={'hi'}/>

@@ -18,28 +18,27 @@ model User {
   email      String   @unique
   created_at DateTime @default(now())
 
-  ownedServers Server[]
-  messages     Messages[]
-  servers      UserServer[]
-  groups       UserGroup[]
-  sent         Requests[]  @relation("sent")
-  requests     Requests[]  @relation("recived")
+  ownedServers   Server[]
+  messages       Messages[]
+  servers        UserServer[]
+  groups         UserGroup[]
+  sent           Requests[]       @relation("sent")
+  requests       Requests[]       @relation("recived")
   serverRequests ServerRequests[]
-
 
   friends   User[] @relation("friends")
   friendsOf User[] @relation("friends")
 }
 
 model Server {
-  id         Int          @id @default(autoincrement())
-  serverName String       @unique
-  createdAt  DateTime     @default(now())
-  owner      User         @relation(fields: [ownerId], references: [id])
-  ownerId    Int          
-  users      UserServer[]
-  groups     Group[]
-  outGoingRequests  ServerRequests[]
+  id               Int              @id @default(autoincrement())
+  serverName       String           @unique
+  createdAt        DateTime         @default(now())
+  owner            User             @relation(fields: [ownerId], references: [id])
+  ownerId          Int
+  users            UserServer[]
+  groups           Group[]
+  outGoingRequests ServerRequests[]
 }
 
 model UserServer {
@@ -54,11 +53,11 @@ model Group {
   id        Int         @id @default(autoincrement())
   name      String
   createdAt DateTime    @default(now())
-  server   Server      @relation(fields: [serverId], references: [id])
+  server    Server      @relation(fields: [serverId], references: [id])
   serverId  Int
   user      UserGroup[]
   messages  Messages[]
-  inServer Boolean
+  inServer  Boolean
 }
 
 model UserGroup {
@@ -76,23 +75,24 @@ model Messages {
   senderId  Int
   group     Group    @relation(fields: [groupId], references: [id])
   groupId   Int
+  content   String   @db.VarChar(200)
 }
 
-model Requests { 
-  id Int @id @default(autoincrement())
+model Requests {
+  id         Int     @id @default(autoincrement())
   senderName String
-  sender   User @relation("sent", fields: [senderId], references: [id])
-  senderId Int 
-  receiver User @relation("recived",fields: [receiverId], references: [id])
-  receiverId Int 
-  pending Boolean 
+  sender     User    @relation("sent", fields: [senderId], references: [id])
+  senderId   Int
+  receiver   User    @relation("recived", fields: [receiverId], references: [id])
+  receiverId Int
+  pending    Boolean
 }
 
 model ServerRequests {
-  id Int @id @default(autoincrement())
-  server  Server @relation(fields: [serverId], references: [id])
-  serverId Int
-  receiver User @relation(fields: [receiverId], references: [id])
+  id         Int      @id @default(autoincrement())
+  server     Server   @relation(fields: [serverId], references: [id])
+  serverId   Int
+  receiver   User     @relation(fields: [receiverId], references: [id])
   receiverId Int
-  created_at DateTime @default(now()) 
+  created_at DateTime @default(now())
 }

@@ -12,11 +12,35 @@ const io = new Server(3000, {
 app.use(cors())
 
 io.on("connection", (socket) => {
-    // socket.emit("hello from server", 1, "2", { 3: Buffer.from([4]) });
+    socket.emit("hello from server", 1, "2", { 3: Buffer.from([4]) });
     console.log(`user connected: ${socket.id }`);
 
-    socket.on('send_message', (stuff) => {
-        console.log(stuff)
+    socket.emit("hello there", "hello there" )
+
+
+    const allMessages = [];
+
+    socket.on('send_message', (data) => {
+        // console.log(data.data)
+        io.to(data.room).emit("receive_message", [allMessages.concat(data.data)])
+
+        socket.emit("add data", data.data)
     })
+
+    socket.on('new data', data => {
+        // console.log(data)
+        allMessages.push(data[0])
+    })
+
+    socket.on('join_room', (room) => {
+        socket.join(room)
+        console.log(socket.rooms)
+        
+    })
+
+    
+
+    console.log(socket.rooms)
+
 })
 

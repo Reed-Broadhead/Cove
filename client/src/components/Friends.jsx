@@ -88,7 +88,7 @@ function Friends({friends=[], friendsOf=[]}) {
     return (
         <>
         {newFriend}
-        <div className="bg-green-500 fixed top-0 left-16 h-screen w-20 text-center">
+        <div className="bg-green-500 fixed top-0 left-20 h-screen w-20 text-center">
             <h1 className="bg-green-600 rounded-md text-left ">friends</h1>
             {toDisplay["Friends"]}
             <button onClick={() => setView('FriendRequests')} >Requests</button>
