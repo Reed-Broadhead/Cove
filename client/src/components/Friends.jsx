@@ -4,8 +4,9 @@ import {setUser} from '../app/user.js'
 import {useFormik} from "formik"
 import * as yup from "yup"
 import CurrentRequests from "./CurrentRequests.jsx";
+import AllFriends from "./AllFriends.jsx";
 
-function Friends({friends=[], friendsOf=[]}) {
+function Friends({friends, friendsOf}) {
    
     const [newFriend, setNewFriend] = useState(null)
     const [view, setView] = useState('Friends')
@@ -73,28 +74,20 @@ function Friends({friends=[], friendsOf=[]}) {
             </div>
         )}
     }
-
-    const mappedFriends = totalFriends.map((friend) => {
-        return <h1>{friend.username.length < 10 ? friend.username: `${friend.username.slice(0, 7)}...` }</h1>
-    })
-
-    // const outGoingRequest = 
-
     const toDisplay = {
-        "Friends": mappedFriends,
+        "Friends": <AllFriends totalFriends={totalFriends} />,
         "FriendRequests": <CurrentRequests data={user.value.user.requests}/>
     }
 
     return (
         <>
         {newFriend}
-        <div className="bg-green-500 fixed top-0 left-20 h-screen w-20 text-center">
-            <h1 className="bg-green-600 rounded-md text-left ">friends</h1>
-            {toDisplay["Friends"]}
-            <button onClick={() => setView('FriendRequests')} >Requests</button>
-            <button className="bg-green-600 rounded-md bottom-0" onClick={() => getNewFriend()}>add friend</button>
+        <div className="bg-green-500 fixed top-0 left-[82px] h-screen w-[100px] text-center">
+            <button className="bg-teal-900 rounded-md text-center w-[100px] shadow-md font-mono" onClick={() => setView('Friends')}>friends</button>
+            <button className='w-[100px] rounded-md bg-teal-900 mt-1 mb-1 shadow-md font-mono' onClick={() => setView('FriendRequests')} >Requests</button>
+            <button className="bg-teal-900 rounded-md bottom-0 w-[100px] shadow-md font-mono" onClick={() => getNewFriend()}>addFriend</button>
         </div>
-        <div className=" w-[40%] border border-red-400">
+        <div className=" w-[40%] h-screen ">
         {toDisplay[view]}
         </div>
         

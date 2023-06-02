@@ -24,7 +24,7 @@ function ServerRequest({data}) {
     })
 
     return (
-        <div className="border h-screen w-1/3 flex flex-col items-center">
+        <div className="bg-green-500 w-1/2 h-[600px] flex flex-col items-center ">
             <h1>server request</h1>
             {serverRequests}
         </div>

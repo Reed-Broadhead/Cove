@@ -15,8 +15,11 @@ function SideBar() {
         const data = await resp.json()
         return data
      }
-
-
+    const [times, setTimes] = useState(0)
+    const goToLogout = () => {
+        alert('if you log out now you dad will die, pleas dont leave my site i wok hard fo diz')
+        setTimes(1)
+    }
 
     const logout = () => {
         remove()
@@ -43,15 +46,12 @@ function SideBar() {
         <div className="fixed top-0 left-0 h-screen w-20 m-0
                         flex flex-col bg-green-700 text-green-100 shadow-sm items-center">
             
-            <Icons data={'hi'}/>
+            <h1 className="bg-teal-950  w-20 text-center font-mono rounded-sm shadow-sm mb-1" >servers</h1>
             {mappedServers}
-            <i>2</i>
-            <i>3</i>
-            <i>4</i>
-            <i>5</i>
-            <button onClick={() => dispatch(setView('serverRequests'))}>requests</button>
-            <button onClick={() => dispatch(setView('friends'))} className='bottom-0'>friends</button>
-            <button onClick={() => logout()} className='bottom-0'>Logout</button>
+            <button className="bg-teal-900 rounded-sm shadow-sm mb-1 w-20 font-mono" onClick={() => dispatch(setView('friends'))} >friends</button>
+            <button className="bg-teal-900 w-20 rounded-sm shadow-sm font-mono mb-1" onClick={() => dispatch(setView('serverRequests'))}>requests</button>
+            <button className="bg-teal-900 w-20 rounded-sm font-mono text-md" onClick={() => dispatch(setView('makeServer'))}>newServer</button>
+            <button className="bg-red-700 mt-20 w-20" onClick={() => times == 1 ? logout(): goToLogout()}>Logout</button>
 
         </div>
     )

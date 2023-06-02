@@ -20,7 +20,8 @@ function ServerCards({server}) {
     
     return (
         <div>
-            <button onClick={() => onButton()}>{server.serverName.length <= 5 ? server.serverName : `${server.serverName.slice(0, 7)}..`} </button>
+            <button className=' border border-green-900 w-20 rounded-md shadow-2xl font-mono mb-1'
+            onClick={() => onButton()}>{server.serverName.length <= 5 ? server.serverName : `${server.serverName.slice(0, 7)}..`} </button>
         </div>
     )
 }

@@ -6,29 +6,26 @@ import axios from 'axios'
 import { useDispatch, useSelector } from'react-redux'
 import {setMessages} from "../app/messages"
 
-const socket = io("http://localhost:3000");
 
 
-function Message({group, user}) {
+
+function Message({group, user, socket}) {
     const messages = useSelector(state => state.messages)
     const dispatch = useDispatch()
-    // console.log(group.id)
-    
-    console.log(messages)
-
+    const [currentMessages, setMessages] = useState({value : []})
+   
 
     const [stateMessages, setStateMessages] = useState(group.messages)
 
    
     useEffect(() => {
-    console.log(messages)
-        
-    socket.connect();
+    // sockets
+    // socket.connect();
 
     socket.on('receive_message', data => {
         console.log(data)
         setStateMessages(stateMessages.concat(data[0]));
-        dispatch(setMessages(messages.value.concat(data[0])))
+        setMessages({value: currentMessages.value.concat(data[0])})
         socket.emit('new data', data[0])
     })
     socket.emit('join_room', group.id)
@@ -38,18 +35,26 @@ function Message({group, user}) {
 
     const postMessage = async (data) => {
         // console.log(data)
-        const newPost = await axios.post('/api/messages', {senderId: data.userId, groupId: data.room, content: data.data.content })
+        // const newPost = await axios.post('/api/messages', {senderId: data.userId, groupId: data.room, content: data.data.content })
     }
-
-    const toBeMapped = group.messages.concat(messages.value)
    
+    const toBeMapped = group.messages.concat(currentMessages.value)
     const messagesByTime = toBeMapped.map((message) => {
+        if(message.data && message.room == group.id) {
+            return (
+                <div className="bg-green-700 w-2/3 shadow-md rounded-md mb-1">
+                <h1 className="ml-1">{message.data.sender.username}</h1>
+                <h1 className="ml-1">{message.data.content}</h1>
+                </div>
+            )
+        }
+        if(!message.data){
         return ( 
             <div className="bg-green-700 w-2/3 shadow-md rounded-md mb-1">
             <h1 className="ml-1">{message.sender.username}</h1>
             <h1 className="ml-1">{message.content}</h1>
             </div>   
-    )
+    )}
     })
     
 

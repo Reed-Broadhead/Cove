@@ -26,7 +26,7 @@ io.on("connection", (socket) => {
 
     socket.on('send_message', (data) => {
         console.log(data.data)
-        io.to(data.room).emit("receive_message", [allMessages.concat(data.data)])
+        io.to(data.room).emit("receive_message", [allMessages.concat(data)])
         socket.emit("add data", data.data)
     
     })
@@ -38,12 +38,12 @@ io.on("connection", (socket) => {
     socket.on('join_room', (room) => {
         socket.join(room)
         console.log(socket.rooms)
-        
     })
-
-    
-
-    console.log(socket.rooms)
-
+    socket.on('leave_room', () => {
+        const [, second] = socket.rooms
+        if (second !== undefined) {
+            socket.leave(second)
+        }
+    })
 })
 

@@ -279,6 +279,19 @@ app.post('/messages', async (req, res, next) => {
     }
 })
 
+app.post('/servers', async (req, res, next) => {
+    try{
+        const server = await prisma.server.create({
+            data: {
+                serverName: req.body.serverName,
+                ownerId: req.body.ownerId,
+            }
+        })
+    }catch(error){
+        next(error.message);
+    }
+})
+
 
 app.listen(port, () => { 
     console.log(`listening on ${port}`)
